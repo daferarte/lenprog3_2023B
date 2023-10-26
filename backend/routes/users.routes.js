@@ -7,8 +7,8 @@ const routerUser = Router();
 routerUser.get('/', showUsers);
 routerUser.get('/:id', showUser);
 routerUser.post('/', addUser);
-routerUser.put('/',updateUser);
-routerUser.delete('/',deleteUser);
+routerUser.put('/:id',updateUser);
+routerUser.delete('/:id',deleteUser);
 
 module.exports = routerUser;
 

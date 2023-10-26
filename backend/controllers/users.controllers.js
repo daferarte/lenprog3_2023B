@@ -1,24 +1,58 @@
 const { response, request } = require('express');
+const { PrismaClient } = require('@prisma/client');
 
+const prisma = new PrismaClient();
 
-const addUser = (req = request, res = response)=>{
-    res.status(201).json({'msn':'Dato almacenado'});
+const addUser = async(req = request, res = response)=>{
+
+    const { email, name } = req.body
+    const user = await prisma.user.create({
+        data: {
+            email,
+            name
+        }
+    })
+
+    res.status(201).json(user);
 }
 
-const showUsers = (req = request, res = response)=>{
-    res.send(`mostrando usuarios`);
+const showUsers = async(req = request, res = response)=>{
+    
+    const users = await prisma.user.findMany()
+
+    res.status(200).json(users)
 }
 
-const showUser = (req = request, res = response)=>{
-    res.send(`mostrando usuario`);
+const showUser = async(req = request, res = response)=>{
+    const { id } = req.params
+    const user = await prisma.user.findMany({
+        where: { id: Number(id) }
+    })
+    
+    res.status(200).json(user)
 }
 
-const updateUser = (req = request, res = response)=>{
-    res.send(`actualizando usuarios`);
+const updateUser = async(req = request, res = response)=>{
+    const { id } = req.params
+    const { email, name } = req.body
+    const user = await prisma.user.update({
+        where: { id:Number(id) },
+        data: {
+            email:email,
+            name:name
+        },
+    })
+    res.json(user)
 }
 
-const deleteUser = (req = request, res = response)=>{
-    res.send(`eliminando usuarios`);
+const deleteUser = async(req = request, res = response)=>{
+    const { id } = req.params
+    const user = await prisma.user.delete({
+        where: {
+        id:Number(id),
+        },
+    })
+    res.json(user)
 }
 
 module.exports={

@@ -1,0 +1,4 @@
+#comando para crear la base de datos
+--https://www.prisma.io/docs/getting-started/quickstart
+
+-npx prisma init --datasource-provider sqlite
