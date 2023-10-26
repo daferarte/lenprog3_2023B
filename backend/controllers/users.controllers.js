@@ -2,7 +2,7 @@ const { response, request } = require('express');
 
 
 const addUser = (req = request, res = response)=>{
-    res.send(`agregando usuario`);
+    res.status(201).json({'msn':'Dato almacenado'});
 }
 
 const showUsers = (req = request, res = response)=>{
