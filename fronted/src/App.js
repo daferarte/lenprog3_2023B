@@ -1,4 +1,7 @@
 import {BrowserRouter, Routes, Route, Link, Outlet, useNavigate, Navigate, useParams} from 'react-router-dom';
+import {Provider} from 'react-redux';
+import { store } from './store';
+import SignIn from './users/SingIn';
 
 let Hello = () => {
   return (
@@ -59,24 +62,26 @@ function App() {
   const isAuth = true;
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Hello />} />
+      <Provider store={store}>
+        <Routes>
+          <Route path="/" element={<Hello />} />
 
-        <Route path="usuario" element={<UsuariosOutlet />}>
-          <Route path="registro" element={isAuth? <NotImplemented />:<Navigate to='/'/>} />
-          <Route path="editar/:id" element={<UsuarioParams />} />
-          <Route path="eliminar/:id" element={<NotImplemented />} />
-        </Route>
+          <Route path="usuario" element={<UsuariosOutlet />}>
+            <Route path="registro" element={isAuth? <SignIn />:<Navigate to='/'/>} />
+            <Route path="editar/:id" element={<UsuarioParams />} />
+            <Route path="eliminar/:id" element={<NotImplemented />} />
+          </Route>
+        
+          <Route path="personas" element={<NotImplemented />}>
+            <Route path="registro" element={<NotImplemented />} />
+            <Route path="editar/:id" element={<NotImplemented />} />
+            <Route path="eliminar/:id" element={<NotImplemented />} />
+          </Route>
 
-        <Route path="personas" element={<NotImplemented />}>
-          <Route path="registro" element={<NotImplemented />} />
-          <Route path="editar/:id" element={<NotImplemented />} />
-          <Route path="eliminar/:id" element={<NotImplemented />} />
-        </Route>
+          <Route path='*' element={<Error404/>} />
 
-        <Route path='*' element={<Error404/>} />
-
-      </Routes>
+        </Routes>
+      </Provider>
     </BrowserRouter>
   );
 }
