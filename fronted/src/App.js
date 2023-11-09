@@ -1,7 +1,12 @@
 import {BrowserRouter, Routes, Route, Link, Outlet, useNavigate, Navigate, useParams} from 'react-router-dom';
-import {Provider} from 'react-redux';
-import { store } from './store';
+import {Provider, useDispatch, useSelector} from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+
+
+
+import { store, persistor } from './store';
 import SignIn from './users/SingIn';
+import { logOut } from './store/user';
 
 let Hello = () => {
   return (
@@ -24,17 +29,25 @@ let UsuarioParams = () => {
 }
 
 let UsuariosOutlet = () => {
+  let user = useSelector(state => state.user.user);
+  let dispatch = useDispatch();
 
   let navigate = useNavigate();
 
-  let redirect =()=>{
+  let doLogOut = () =>{
+    dispatch(
+      logOut()
+    )
+
     navigate('/');
+
   }
 
   return (
     <div>
-      <h1>Usuarios!</h1>
-      <button onClick={redirect}>Ir al inicio</button>
+      {
+        user && <button onClick={doLogOut}>Cerrar Sesion</button>
+      }
       <Outlet/>
     </div>
   );
@@ -63,24 +76,28 @@ function App() {
   return (
     <BrowserRouter>
       <Provider store={store}>
-        <Routes>
-          <Route path="/" element={<Hello />} />
+        <PersistGate loading={null} persistor={persistor}>
+          <Routes>
+            <Route path="/" element={<Hello />} />
 
-          <Route path="usuario" element={<UsuariosOutlet />}>
-            <Route path="registro" element={isAuth? <SignIn />:<Navigate to='/'/>} />
-            <Route path="editar/:id" element={<UsuarioParams />} />
-            <Route path="eliminar/:id" element={<NotImplemented />} />
-          </Route>
-        
-          <Route path="personas" element={<NotImplemented />}>
-            <Route path="registro" element={<NotImplemented />} />
-            <Route path="editar/:id" element={<NotImplemented />} />
-            <Route path="eliminar/:id" element={<NotImplemented />} />
-          </Route>
+            <Route path="login" element={<SignIn />} />
 
-          <Route path='*' element={<Error404/>} />
+            <Route path="usuario" element={<UsuariosOutlet />}>
+              <Route path="registro" element={isAuth? <SignIn />:<Navigate to='/'/>} />
+              <Route path="editar/:id" element={<UsuarioParams />} />
+              <Route path="eliminar/:id" element={<NotImplemented />} />
+            </Route>
+          
+            <Route path="personas" element={<NotImplemented />}>
+              <Route path="registro" element={<NotImplemented />} />
+              <Route path="editar/:id" element={<NotImplemented />} />
+              <Route path="eliminar/:id" element={<NotImplemented />} />
+            </Route>
 
-        </Routes>
+            <Route path='*' element={<Error404/>} />
+
+          </Routes>
+        </PersistGate>
       </Provider>
     </BrowserRouter>
   );

@@ -3,6 +3,19 @@ const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 
+const signIn = async(req = request, res = response)=>{
+
+    const { email } = req.body.user;
+    
+    const user = await prisma.user.findUnique({
+        where: {
+            email
+        }
+    })
+
+    res.status(201).json(user);
+}
+
 const addUser = async(req = request, res = response)=>{
 
     const { email, name } = req.body.user;
@@ -61,5 +74,6 @@ module.exports={
     showUsers,
     showUser,
     updateUser,
-    deleteUser
+    deleteUser,
+    signIn
 }

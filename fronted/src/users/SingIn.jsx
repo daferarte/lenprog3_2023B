@@ -1,43 +1,28 @@
 import React from "react";
-import { useDispatch, useSelector} from 'react-redux';
+import { useDispatch} from 'react-redux';
+import { useForm } from 'react-hook-form';
 
-import {logOut, signIn, signUp} from '../store/user';
+import {signIn} from '../store/user';
 
 let SignIn = (props) => {
     let dispatch = useDispatch();
 
-    let user = useSelector(state => state.user.user);
+    const {register, handleSubmit}=useForm();
 
-    console.log(user);
-
-    let doSignIn = () => {
+    let onSubmit = (data) => {
         dispatch(
-            // signIn({
-            //     email: 'daniel@daniel.com',
-            //     token: 'dnwqjeh3872yre87wf'
-            // })
-            signUp({
-                credential:{
-                    email: 'danss@daniel.com',
-                    name: 'dan redux'
-                }
+            signIn({
+                credential:data
             })
-        )
-    }
-
-    let doLogOut = () => {
-        dispatch(
-            logOut()
         )
     }
 
     return(
         <div>
-            {
-                user?<button onClick={doLogOut}>Log Out</button>:<button onClick={doSignIn}>Sign In</button>
-            }
-            
-            
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <input type="email" name="email" {...register("email")} placeholder="Correo electronico" />
+                <input type="submit" value="Enviar" />
+            </form>
         </div>
     )
 }
